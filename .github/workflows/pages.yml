@@ -26,8 +26,9 @@ jobs:
         with:
           node-version: 22
 
+      # ✅ تم التعديل هنا: استبدال npm ci بـ npm install
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build with User mode
         run: npm run build:user
