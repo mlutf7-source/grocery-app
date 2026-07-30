@@ -22,11 +22,16 @@ jobs:
       - name: Build React app
         run: npm run build:user
 
+      # ✅ تثبيت Capacitor CLI محليًا
+      - name: Install Capacitor CLI
+        run: npm install --save-dev @capacitor/cli
+
+      # ✅ استخدام npx مع تحديد الحزمة لضمان العثور على الأمر
       - name: Add Android platform
-        run: npx cap add android
+        run: npx -p @capacitor/cli cap add android
 
       - name: Sync Capacitor
-        run: npx cap sync android
+        run: npx -p @capacitor/cli cap sync android
 
       - name: Setup Java
         uses: actions/setup-java@v4
