@@ -1,4 +1,4 @@
-concurrency: name: Build Android APK (User)
+name: Build Android APK (User)
 
 on:
   workflow_dispatch:
@@ -22,7 +22,6 @@ jobs:
       - name: Build React app
         run: npm run build:user
 
-      # ✅ خطوة جديدة: تثبيت ts-node لقراءة ملفات TypeScript
       - name: Install ts-node
         run: npm install --save-dev ts-node
 
