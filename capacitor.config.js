@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   appId: 'com.albakalat.grocery',
   appName: 'البقالات',
   webDir: 'dist',
