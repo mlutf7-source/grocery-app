@@ -22,9 +22,6 @@ jobs:
       - name: Build React app
         run: npm run build:user
 
-      - name: Install ts-node
-        run: npm install --save-dev ts-node
-
       - name: Add Android platform
         run: npx cap add android
 
