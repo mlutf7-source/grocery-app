@@ -21,6 +21,7 @@ import LockScreen from '@/pages/LockScreen';
 import Notifications from '@/pages/Notifications';
 import ActivationPage from '@/pages/ActivationPage';
 import { useState, useEffect } from 'react';
+import { useStore } from '@/store'; // ✅ تم إضافة الاستيراد
 import { checkAllNotifications } from '@/utils/checkNotifications';
 import { autoBackup } from '@/utils/backup';
 import { isTrialExpired, isActivated } from '@/utils/activation';
@@ -29,6 +30,8 @@ function App() {
   const [unlocked, setUnlocked] = useState(!localStorage.getItem('app-passcode'));
   const [activated, setActivated] = useState(false);
   const [loading, setLoading] = useState(true);
+  
+  const s = useStore(); // ✅ تم الحصول على الستور
 
   useEffect(() => {
     const passcode = localStorage.getItem('app-passcode');
@@ -50,16 +53,16 @@ function App() {
   useEffect(() => {
     if (!unlocked || !activated) return;
 
-    checkAllNotifications();
+    checkAllNotifications(s); // ✅ تمرير الستور للدالة
     autoBackup();
 
     const interval = setInterval(() => {
-      checkAllNotifications();
+      checkAllNotifications(s); // ✅ تمرير الستور للدالة
       autoBackup();
     }, 60 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [unlocked, activated]);
+  }, [unlocked, activated, s]);
 
   if (loading) return null;
 
