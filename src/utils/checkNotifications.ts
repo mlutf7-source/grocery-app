@@ -1,8 +1,6 @@
 import { getNotifications, addNotification } from './notifications';
-import { useStore } from '@/store';
 
-export function checkAllNotifications() {
-  const s = useStore();
+export function checkAllNotifications(s: any) {
   const now = new Date();
   const today = now.toISOString().split('T')[0];
 
@@ -41,7 +39,4 @@ export function checkAllNotifications() {
       });
     }
   });
-
-  // 4. إشعارات المبيعات الآجلة (اختياري)
-  // يمكن إضافة المزيد هنا حسب الحاجة
-}
+                                                                }
