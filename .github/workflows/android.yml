@@ -16,9 +16,8 @@ jobs:
         with:
           node-version: 22
 
-      # ✅ تثبيت المكتبات المحلية + تثبيت Capacitor CLI محلياً (ليتمكن التكوين من استيرادها)
       - name: Install dependencies
-        run: npm install && npm install @capacitor/cli
+        run: npm install
 
       - name: Build React app
         run: npm run build:user
