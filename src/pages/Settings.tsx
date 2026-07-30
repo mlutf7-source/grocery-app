@@ -5,8 +5,6 @@ import Input from '@/components/ui/Input';
 import { useStore } from '@/store';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Unlock, RefreshCw, Smartphone, Shield, Info } from 'lucide-react';
-import { Capacitor } from '@capacitor/core';
-import { App } from '@capacitor/app';
 
 export default function Settings() {
   const s = useStore();
@@ -40,11 +38,17 @@ export default function Settings() {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     if (confirm('هل تريد الخروج من النظام؟')) {
-      if (Capacitor.isNativePlatform()) {
-        await App.exitApp();
-      } else {
+      // في حالة التطبيق الأصلي (Capacitor) سنغلق التطبيق، وفي المتصفح نغلق النافذة
+      try {
+        // محاولة استخدام Capacitor إذا كان متاحاً (اختياري)
+        if (window.Capacitor?.isNativePlatform()) {
+          window.Capacitor?.Plugins?.App?.exitApp();
+        } else {
+          window.close();
+        }
+      } catch {
         window.close();
       }
     }
@@ -112,4 +116,4 @@ export default function Settings() {
       </Card>
     </div>
   );
-}
+        }
