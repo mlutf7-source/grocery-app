@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    direction: rtl;
+    font-family: 'Cairo', sans-serif;
+    background-color: #F4F7F5;
+    color: #1F2937;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  :root {
+    --bg-background: #F4F7F5;
+    --bg-surface: #FFFFFF;
+    --text-primary: #1F2937;
+    --text-secondary: #6B7280;
+    --border-color: #E5E7EB;
+  }
+
+  .dark {
+    --bg-background: #111827;
+    --bg-surface: #1F2937;
+    --text-primary: #F3F4F6;
+    --text-secondary: #9CA3AF;
+    --border-color: #374151;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply min-h-screen bg-background p-4 pb-28;
+  }
+
+  .page-title {
+    @apply text-page-title font-bold text-text-primary mb-4;
+  }
+
+  .card {
+    @apply bg-surface rounded-card shadow-card p-4 border border-border;
+  }
+
+  .card-accent {
+    @apply card border-r-4 border-r-primary;
+  }
+
+  .input-field {
+    @apply w-full h-[48px] rounded-input border border-border bg-surface text-body text-text-primary px-3 outline-none transition-colors focus:border-primary;
+  }
+
+  .search-input {
+    @apply input-field pl-10 pr-3;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white rounded-btn px-6 py-3 font-semibold transition-colors hover:bg-primary-dark;
+  }
+
+  .btn-danger {
+    @apply bg-danger text-white rounded-btn px-6 py-3 font-semibold transition-colors hover:bg-red-700;
+  }
+
+  .rounded-input {
+    border-radius: 12px;
+  }
+  .rounded-btn {
+    border-radius: 12px;
+  }
+  .rounded-card {
+    border-radius: 18px;
+  }
+  .rounded-dialog {
+    border-radius: 20px;
+  }
+}
