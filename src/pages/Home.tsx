@@ -1,39 +1,81 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '@/components/ui/Card';
-import { ShoppingCart, ArrowDownToLine, Package, BarChart3 } from 'lucide-react';
+import Dialog from '@/components/ui/Dialog';
+import {
+  ShoppingCart, ArrowDownToLine, BarChart3, Package, ClipboardList,
+  ArrowUpCircle, ArrowDownCircle, Users, Factory, Wallet, Receipt,
+  HelpCircle, Settings, Trash2, BookOpen, Store
+} from 'lucide-react';
+
+const items = [
+  { title: 'بيع منتج', icon: ShoppingCart, path: '/sales', color: 'text-success', bg: 'bg-success/10', desc: 'إنشاء فاتورة بيع نقدي أو آجل. ابحث عن المنتج وأضفه للفاتورة.' },
+  { title: 'شراء منتج', icon: ArrowDownToLine, path: '/purchases', color: 'text-warning', bg: 'bg-warning/10', desc: 'إنشاء فاتورة شراء من مورد. اختر وحدة الشراء (كرتون/حبة).' },
+  { title: 'المخزون', icon: ClipboardList, path: '/inventory', color: 'text-info', bg: 'bg-info/10', desc: 'مراقبة المخزون الحالي. يظهر عدد الحبات والكراتين، قيمة المخزون.' },
+  { title: 'المنتجات', icon: Package, path: '/products', color: 'text-primary', bg: 'bg-primary-light', desc: 'إضافة وتعديل وحذف المنتجات. يمكنك إدخال المنتج بالكرتون أو الحبة.' },
+  { title: 'سند قبض', icon: ArrowUpCircle, path: '/receipt', color: 'text-success', bg: 'bg-success/10', desc: 'تسجيل مبلغ تم استلامه من عميل أو مورد.' },
+  { title: 'سند صرف', icon: ArrowDownCircle, path: '/payment', color: 'text-danger', bg: 'bg-danger/10', desc: 'تسجيل مبلغ تم دفعه إلى مورد أو عميل.' },
+  { title: 'العملاء', icon: Users, path: '/customers', color: 'text-info', bg: 'bg-info/10', desc: 'إدارة حسابات العملاء: إضافة وتعديل وحذف. عرض الرصيد (عليه/له).' },
+  { title: 'الموردين', icon: Factory, path: '/suppliers', color: 'text-warning', bg: 'bg-warning/10', desc: 'إدارة حسابات الموردين: إضافة وتعديل وحذف. عرض الرصيد (له/عليه).' },
+  { title: 'الصناديق', icon: Wallet, path: '/cashboxes', color: 'text-success', bg: 'bg-success/10', desc: 'إدارة الصناديق النقدية. الصندوق الرئيسي جاهز افتراضياً.' },
+  { title: 'المصروفات', icon: Receipt, path: '/expenses', color: 'text-danger', bg: 'bg-danger/10', desc: 'تسجيل المصروفات اليومية: إيجارات، رواتب، كهرباء.' },
+  { title: 'لوحة التحكم', icon: BarChart3, path: '/dashboard', color: 'text-primary', bg: 'bg-primary-light', desc: 'نظرة عامة على أداء المتجر: رصيد الصناديق، المخزون، المبيعات.' },
+  { title: 'التقارير', icon: BarChart3, path: '/reports', color: 'text-info', bg: 'bg-info/10', desc: 'تقارير شاملة: كشوف حسابات العملاء والموردين والصناديق.' },
+  { title: 'الإعدادات', icon: Settings, path: '/settings', color: 'text-text-secondary', bg: 'bg-gray-100', desc: 'تخصيص التطبيق: العملة، النسخ الاحتياطي، قفل التطبيق.' },
+  { title: 'تعليمات', icon: BookOpen, path: '/guide', color: 'text-info', bg: 'bg-info/10', desc: 'شرح كامل لطريقة استخدام جميع أقسام التطبيق.' },
+  { title: 'سلة المحذوفات', icon: Trash2, path: '/trash', color: 'text-danger', bg: 'bg-danger/10', desc: 'استعادة أو حذف نهائي للعناصر المحذوفة.' },
+  { title: 'بيانات المستخدم', icon: Store, path: '/store-info', color: 'text-primary', bg: 'bg-primary-light', desc: 'تحديث بيانات المتجر: الاسم، المالك، الهاتف، العنوان، والشعار.' },
+];
 
 export default function Home() {
-  const navigate = useNavigate();
+  const nav = useNavigate();
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [infoTitle, setInfoTitle] = useState('');
+  const [infoDesc, setInfoDesc] = useState('');
+
+  const openInfo = (title: string, desc: string) => {
+    setInfoTitle(title);
+    setInfoDesc(desc);
+    setInfoOpen(true);
+  };
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">القائمة الرئيسية</h1>
-      <div className="grid grid-cols-2 gap-4">
-        <Card variant="accent" className="!p-6 cursor-pointer hover:shadow-card-hover" onClick={() => navigate('/sales')}>
-          <div className="flex flex-col items-center gap-2">
-            <ShoppingCart size={32} className="text-primary" />
-            <span className="font-semibold text-body">بيع منتج</span>
-          </div>
-        </Card>
-        <Card variant="accent" className="!p-6 cursor-pointer hover:shadow-card-hover" onClick={() => navigate('/purchases')}>
-          <div className="flex flex-col items-center gap-2">
-            <ArrowDownToLine size={32} className="text-warning" />
-            <span className="font-semibold text-body">شراء منتج</span>
-          </div>
-        </Card>
-        <Card variant="accent" className="!p-6 cursor-pointer hover:shadow-card-hover" onClick={() => navigate('/inventory')}>
-          <div className="flex flex-col items-center gap-2">
-            <Package size={32} className="text-info" />
-            <span className="font-semibold text-body">المخزون</span>
-          </div>
-        </Card>
-        <Card variant="accent" className="!p-6 cursor-pointer hover:shadow-card-hover" onClick={() => navigate('/reports')}>
-          <div className="flex flex-col items-center gap-2">
-            <BarChart3 size={32} className="text-success" />
-            <span className="font-semibold text-body">التقارير</span>
-          </div>
-        </Card>
+    <div className="page-container pb-24">
+      <h1 className="page-title mb-6">القائمة الرئيسية</h1>
+      
+      {/* شبكة 4 أعمدة للأيقونات الرباعية الأبعاد */}
+      <div className="grid grid-cols-4 gap-3">
+        {items.map((item, i) => {
+          const Icon = item.icon;
+          return (
+            <div key={i} className="relative flex flex-col items-center">
+              <Card 
+                variant="icon" 
+                className="w-full aspect-square gap-1.5 h-auto min-h-[85px] cursor-pointer hover:shadow-card-hover transition-shadow relative"
+                onClick={() => nav(item.path)}
+              >
+                <button
+                  className="absolute top-1.5 left-1.5 flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors border border-amber-200"
+                  onClick={(e) => { e.stopPropagation(); openInfo(item.title, item.desc); }}
+                >
+                  <HelpCircle size={12} />
+                </button>
+                <Icon size={28} className={item.color} />
+                <span className="font-semibold text-[10px] text-center text-text-secondary leading-tight">
+                  {item.title}
+                </span>
+              </Card>
+            </div>
+          );
+        })}
       </div>
+
+      <Dialog open={infoOpen} onClose={() => setInfoOpen(false)} title={infoTitle}>
+        <div className="space-y-3 pb-4">
+          <p className="text-body text-text-secondary leading-relaxed">{infoDesc}</p>
+          <button onClick={() => setInfoOpen(false)} className="w-full py-2 bg-primary text-white rounded-btn text-small font-semibold">فهمت</button>
+        </div>
+      </Dialog>
     </div>
   );
-}
+    }
