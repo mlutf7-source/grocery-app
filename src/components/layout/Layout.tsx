@@ -5,7 +5,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      {/* تمت زيادة المسافة العلوية لاستيعاب الهيدر + الشريط */}
+      {/* تم ضبط المسافة العلوية لتتناسب مع الهيدر والشريط الأفقي */}
       <main className="pt-[120px] pb-6 px-4">
         <Outlet />
       </main>
