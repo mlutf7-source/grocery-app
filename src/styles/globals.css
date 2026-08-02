@@ -10,6 +10,7 @@
     color: #1F2937;
   }
 
+  /* إخفاء أسهم الزيادة/النقصان في حقول الأرقام */
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -69,6 +70,14 @@
     @apply bg-danger text-white rounded-btn px-6 py-3 font-semibold transition-colors hover:bg-red-700;
   }
 
+  /* توسيع الحقول تلقائياً حسب المحتوى */
+  .field-sizing-content {
+    field-sizing: content;
+    min-width: 60px;
+  }
+}
+
+@layer utilities {
   .rounded-input {
     border-radius: 12px;
   }
