@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useStore } from '@/store';
 import { usePreventLeave } from '@/hooks/usePreventLeave';
 import Card from '@/components/ui/Card';
@@ -23,6 +23,9 @@ export default function Products() {
   const [barcodeOpen, setBarcodeOpen] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
+  // مرجع لأول حقل في النافذة (لتشغيل autoFocus)
+  const firstInputRef = useRef<HTMLInputElement>(null);
+
   usePreventLeave(hasChanges);
 
   const filtered = [...s.products].reverse().filter((p: any) => p.name.includes(search) || p.barcode.includes(search));
@@ -33,7 +36,7 @@ export default function Products() {
     setHasChanges(false);
   };
 
-  const openAdd = () => { reset(); setOpen(true); };
+  const openAdd = () => { reset(); setOpen(true); setTimeout(() => firstInputRef.current?.focus(), 100); };
   const openEdit = (p: any) => {
     setEdit(p);
     setF({
@@ -46,6 +49,7 @@ export default function Products() {
     });
     setHasChanges(true);
     setOpen(true);
+    setTimeout(() => firstInputRef.current?.focus(), 100);
   };
 
   const handleChange = (field: string, value: string) => {
@@ -94,11 +98,11 @@ export default function Products() {
 
   return (
     <div className="page-container">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="page-title mb-0">المنتجات</h1>
-        <Button onClick={openAdd}><Plus size={20} />إضافة</Button>
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        <SearchInput value={search} onChange={setSearch} placeholder="بحث عن منتج..." />
+        <Button onClick={openAdd} className="h-[48px]"><Plus size={20} />إضافة</Button>
       </div>
-      <SearchInput value={search} onChange={setSearch} placeholder="بحث عن منتج..." />
+      
       {!filtered.length ? <EmptyState message="لا توجد منتجات" /> : (
         <div className="space-y-3">
           {filtered.map((p: any) => {
@@ -136,9 +140,10 @@ export default function Products() {
           })}
         </div>
       )}
+      
       <Dialog open={open} onClose={handleClose} title={edit ? 'تعديل منتج' : 'إضافة منتج'}>
         <div className="space-y-4 pb-6">
-          <div><label className={LC}>اسم المنتج</label><Input value={f.name} onChange={e => handleChange('name', e.target.value)} /></div>
+          <div><label className={LC}>اسم المنتج</label><Input ref={firstInputRef} value={f.name} onChange={e => handleChange('name', e.target.value)} /></div>
           <div>
             <label className={LC}>الباركود</label>
             <div className="flex gap-2">
@@ -146,11 +151,33 @@ export default function Products() {
               <button onClick={() => setBarcodeOpen(true)} className="flex items-center justify-center w-[48px] h-[48px] rounded-input border border-border bg-surface text-text-secondary hover:text-primary hover:border-primary transition-colors"><Scan size={22} /></button>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div><label className={LC}>الوحدة</label><select value={f.unit} onChange={e => handleChange('unit', e.target.value)} className="input-field"><option value="كرتون">كرتون</option><option value="حبة">حبة</option></select></div>
-            {f.unit === 'كرتون' && <div><label className={LC}>عدد الحبات في الكرتون</label><Input type="number" value={f.boxQty} onChange={e => handleChange('boxQty', e.target.value)} /></div>}
+          
+          <div className="grid grid-cols-2 gap-3 items-start">
+            <div>
+              <label className={LC}>الوحدة</label>
+              <select 
+                value={f.unit} 
+                onChange={e => handleChange('unit', e.target.value)} 
+                className="input-field w-full"
+              >
+                <option value="كرتون">كرتون</option>
+                <option value="حبة">حبة</option>
+              </select>
+            </div>
+            {f.unit === 'كرتون' && (
+              <div>
+                <label className={LC}>عدد الحبات في الكرتون</label>
+                <Input type="number" value={f.boxQty} onChange={e => handleChange('boxQty', e.target.value)} />
+              </div>
+            )}
+            {f.unit === 'حبة' && !edit && (
+              <div>
+                <label className={LC}>الكمية المتوفرة حالياً</label>
+                <Input type="number" value={f.openingStock} onChange={e => handleChange('openingStock', e.target.value)} />
+              </div>
+            )}
           </div>
-          {!edit && <div><label className={LC}>الرصيد الافتتاحي (حبة)</label><Input type="number" value={f.openingStock} onChange={e => handleChange('openingStock', e.target.value)} /></div>}
+          
           <div className="grid grid-cols-2 gap-3">
             <div><label className={LC}>سعر الشراء (حبة)</label><Input type="number" value={f.purchasePrice} onChange={e => handleChange('purchasePrice', e.target.value)} /></div>
             <div><label className={LC}>سعر البيع (حبة)</label><Input type="number" value={f.sellingPrice} onChange={e => handleChange('sellingPrice', e.target.value)} /></div>
@@ -159,7 +186,8 @@ export default function Products() {
           <Button fullWidth onClick={save}>{edit ? 'تحديث' : 'حفظ'}</Button>
         </div>
       </Dialog>
+      
       <BarcodeScanner open={barcodeOpen} onClose={() => setBarcodeOpen(false)} onDetected={handleBarcodeDetected} onProductFound={(product: any) => { alert(`المنتج موجود: ${product.name} - المخزون: ${product.stockQuantity || 0} حبة`); }} onNewProduct={(info: any) => { setF({ ...f, name: info.name || '', barcode: info.barcode || '' }); setBarcodeOpen(false); }} />
     </div>
   );
-      }
+    }
